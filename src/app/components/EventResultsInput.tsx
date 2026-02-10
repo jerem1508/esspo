@@ -34,7 +34,8 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
   const [localError, setLocalError] = useState<string | null>(null);
   const [results, setResults] = useState<Result[]>([]);
 
-  const currentBareme = state.baremes.find((b: Bareme) => b.event === event);
+  // Trouver le barème correspondant à l'épreuve ET à la catégorie sélectionnée
+  const currentBareme = state.baremes.find((b: Bareme) => b.event === event && b.category === selectedCategory);
 
   useEffect(() => {
     const eventResults = state.results.filter((r: Result) => r.event === event);
@@ -88,7 +89,7 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
     }
 
     if (!currentBareme) {
-      setLocalError("Aucun barème défini pour cette épreuve");
+      setLocalError(`Aucun barème défini pour l'épreuve "${EVENT_LABELS[event]}" et la catégorie "${CATEGORY_LABELS[selectedCategory]}"`);
       return;
     }
 
@@ -147,7 +148,11 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
 
       {(localError || error) && <div className="error-message">⚠️ {localError || error}</div>}
 
-      {!currentBareme && <div className="warning-message">⚠️ Aucun barème défini pour cette épreuve</div>}
+      {selectedCategory && !currentBareme && (
+        <div className="warning-message">
+          ⚠️ Aucun barème défini pour l'épreuve "{EVENT_LABELS[event]}" et la catégorie "{CATEGORY_LABELS[selectedCategory]}"
+        </div>
+      )}
 
       <div className="wizard-container">
         {/* ÉTAPE 1: SÉLECTION CATÉGORIE */}

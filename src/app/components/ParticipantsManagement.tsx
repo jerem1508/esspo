@@ -181,12 +181,10 @@ export function ParticipantsManagement({ clubs, onAddClub }: ParticipantsManagem
           <form onSubmit={handleSubmit} className="form-container">
             <div className="row">
               <div className="input-field col s12 m6">
-                <input id="firstName" name="firstName" type="text" value={formData.firstName} onChange={handleChange} required />
-                <label htmlFor="firstName">Prénom</label>
+                <input id="firstName" name="firstName" type="text" placeholder="Prénom" value={formData.firstName} onChange={handleChange} required />
               </div>
               <div className="input-field col s12 m6">
-                <input id="lastName" name="lastName" type="text" value={formData.lastName} onChange={handleChange} required />
-                <label htmlFor="lastName">Nom</label>
+                <input id="lastName" name="lastName" type="text" placeholder="Nom" value={formData.lastName} onChange={handleChange} required />
               </div>
             </div>
 
@@ -207,8 +205,15 @@ export function ParticipantsManagement({ clubs, onAddClub }: ParticipantsManagem
               </div>
 
               <div className="input-field col s12 m3">
-                <input id="licenseNumber" name="licenseNumber" type="text" value={formData.licenseNumber} onChange={handleChange} required />
-                <label htmlFor="licenseNumber">Numéro de licence</label>
+                <input
+                  id="licenseNumber"
+                  name="licenseNumber"
+                  type="text"
+                  placeholder="Licence"
+                  value={formData.licenseNumber}
+                  onChange={handleChange}
+                  required
+                />
               </div>
               <div className="input-field col s12 m3">
                 <select name="clubId" value={formData.clubId} onChange={handleChange} required>

@@ -4,15 +4,7 @@ html,
 body {
   background-color: #fff;
   font-family: "Inter", Roboto, Helvetica, Arial, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  html,
-  body {
-    background-color: #121212;
-    color: #fff;
-    color-scheme: dark;
-  }
+  color-scheme: light;
 }
 
 /* Custom styles for competition app */

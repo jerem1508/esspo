@@ -1,18 +1,16 @@
 import type { Participant, Category, ClassementIndividuel, ClassementClub, Bareme, Result } from "../types/competition";
 
-// Catégories basées sur l'année de naissance (approximation)
-// À adapter selon les règles de votre fédération
+// Catégories basées sur l'année de naissance
 export function getCategoryByBirthDate(birthDate: string, gender: "M" | "F"): Category {
   const birth = new Date(birthDate);
-  const currentYear = new Date().getFullYear();
-  const age = currentYear - birth.getFullYear();
+  const birthYear = birth.getFullYear();
 
-  if (age <= 10) {
+  if (birthYear >= 2017 && birthYear <= 2019) {
     return gender === "F" ? "EAF" : "EAM"; // Éveil
-  } else if (age <= 12) {
+  } else if (birthYear >= 2015 && birthYear <= 2016) {
     return gender === "F" ? "POF" : "POM"; // Poussins/Poussines
   }
-  return gender === "F" ? "POF" : "POM"; // Par défaut
+  return "???" as Category; // Par défaut
 }
 
 export function calculatePointsForPerformance(performance: number, bareme: Bareme): number {
