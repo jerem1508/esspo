@@ -21,10 +21,8 @@ export interface Participant {
 }
 
 export interface BaremeRow {
-  rank: number; // Position/rang
-  minPerformance: number;
-  maxPerformance: number;
-  points: number;
+  performance: number; // La performance seuil
+  points: number; // Points attribués si la performance est atteinte ou dépassée
 }
 
 export interface Bareme {

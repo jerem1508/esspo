@@ -33,11 +33,6 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Charger les données au montage
-  useEffect(() => {
-    loadData();
-  }, []);
-
   const loadData = async () => {
     try {
       setLoading(true);
@@ -63,14 +58,16 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Charger les données au montage
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const addClub = async (club: Omit<Club, "id">) => {
     try {
       setError(null);
-      const newClub = await clubsAPI.create(club);
-      setState((prev) => ({
-        ...prev,
-        clubs: [...prev.clubs, newClub],
-      }));
+      await clubsAPI.create(club);
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de l'ajout";
       setError(message);
@@ -82,10 +79,7 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       await clubsAPI.delete(clubId);
-      setState((prev) => ({
-        ...prev,
-        clubs: prev.clubs.filter((c) => c.id !== clubId),
-      }));
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de la suppression";
       setError(message);
@@ -96,11 +90,8 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
   const addParticipant = async (participant: Omit<Participant, "id" | "created_at" | "updated_at">) => {
     try {
       setError(null);
-      const newParticipant = await participantsAPI.create(participant);
-      setState((prev) => ({
-        ...prev,
-        participants: [...prev.participants, newParticipant],
-      }));
+      await participantsAPI.create(participant);
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de l'ajout";
       setError(message);
@@ -112,10 +103,7 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       await participantsAPI.update(participant.id, participant);
-      setState((prev) => ({
-        ...prev,
-        participants: prev.participants.map((p) => (p.id === participant.id ? participant : p)),
-      }));
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de la mise à jour";
       setError(message);
@@ -127,11 +115,7 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       await participantsAPI.delete(participantId);
-      setState((prev) => ({
-        ...prev,
-        participants: prev.participants.filter((p) => p.id !== participantId),
-        results: prev.results.filter((r) => r.participantId !== participantId),
-      }));
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de la suppression";
       setError(message);
@@ -142,16 +126,8 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
   const saveBareme = async (bareme: Omit<Bareme, "id" | "created_at" | "updated_at"> & { id?: string }) => {
     try {
       setError(null);
-      const savedBareme = await baremesAPI.save(bareme as any);
-      setState((prev) => {
-        const existing = prev.baremes.findIndex((b) => b.id === savedBareme.id);
-        if (existing >= 0) {
-          const updated = [...prev.baremes];
-          updated[existing] = savedBareme;
-          return { ...prev, baremes: updated };
-        }
-        return { ...prev, baremes: [...prev.baremes, savedBareme] };
-      });
+      await baremesAPI.save(bareme as any);
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de la sauvegarde";
       setError(message);
@@ -162,11 +138,8 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
   const addResult = async (result: Omit<Result, "id" | "created_at" | "updated_at">) => {
     try {
       setError(null);
-      const newResult = await resultsAPI.create(result);
-      setState((prev) => ({
-        ...prev,
-        results: [...prev.results, newResult],
-      }));
+      await resultsAPI.create(result);
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de l'ajout";
       setError(message);
@@ -178,10 +151,7 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       await resultsAPI.update(result.id, result);
-      setState((prev) => ({
-        ...prev,
-        results: prev.results.map((r) => (r.id === result.id ? result : r)),
-      }));
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de la mise à jour";
       setError(message);
@@ -193,10 +163,7 @@ export function CompetitionProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       await resultsAPI.delete(resultId);
-      setState((prev) => ({
-        ...prev,
-        results: prev.results.filter((r) => r.id !== resultId),
-      }));
+      await loadData();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur lors de la suppression";
       setError(message);

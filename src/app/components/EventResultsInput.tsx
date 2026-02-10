@@ -16,10 +16,10 @@ const EVENT_LABELS: Record<Event, string> = {
 };
 
 const CATEGORY_LABELS: Record<Category, string> = {
-  EAF: "Éveil Filles",
-  EAM: "Éveil Garçons",
-  POF: "Poussines Filles",
-  POM: "Poussins Garçons",
+  EAF: "Éveil Filles EAF",
+  EAM: "Éveil Garçons EAM",
+  POF: "Poussines Filles POF",
+  POM: "Poussins Garçons POM",
 };
 
 type Step = "category" | "participant" | "result";

@@ -14,12 +14,28 @@ export function getCategoryByBirthDate(birthDate: string, gender: "M" | "F"): Ca
 }
 
 export function calculatePointsForPerformance(performance: number, bareme: Bareme): number {
-  for (const row of bareme.rows) {
-    if (performance >= row.minPerformance && performance <= row.maxPerformance) {
-      return row.points;
+  // Trier les lignes du barème par points décroissants
+  const sortedRows = [...bareme.rows].sort((a, b) => b.points - a.points);
+
+  // Pour les épreuves de temps (vitesse, haies), plus le temps est bas, mieux c'est
+  // Pour les épreuves de distance (pentabond, lancé), plus c'est haut, mieux c'est
+  const isTimeEvent = bareme.unit === "s";
+
+  for (const row of sortedRows) {
+    if (isTimeEvent) {
+      // Pour le temps : performance <= seuil donne les points
+      if (performance <= row.performance) {
+        return row.points;
+      }
+    } else {
+      // Pour la distance : performance >= seuil donne les points
+      if (performance >= row.performance) {
+        return row.points;
+      }
     }
   }
-  return 0; // Aucun point si ne correspond à aucune plage
+
+  return 0; // Aucun point si ne correspond à aucun seuil
 }
 
 export function calculateClassementIndividuel(
