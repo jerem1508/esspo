@@ -124,16 +124,21 @@ export function calculateClassementClub(classementIndividuel: ClassementIndividu
     club.members.add(item.participantId);
   });
 
-  const classement = Array.from(clubPointsMap.values()).map((club, index) => ({
-    clubId: index.toString(),
-    clubName: club.name,
-    totalPoints: club.points,
-    memberCount: club.members.size,
-    rank: 0,
-  }));
+  const classement = Array.from(clubPointsMap.values()).map((club, index) => {
+    const memberCount = club.members.size;
+    const averagePoints = memberCount > 0 ? Math.round((club.points / memberCount) * 100) / 100 : 0;
+    return {
+      clubId: index.toString(),
+      clubName: club.name,
+      totalPoints: club.points,
+      averagePoints,
+      memberCount,
+      rank: 0,
+    };
+  });
 
-  // Trier par points décroissants
-  classement.sort((a, b) => b.totalPoints - a.totalPoints);
+  // Trier par points moyens (pondérés) décroissants
+  classement.sort((a, b) => b.averagePoints - a.averagePoints);
 
   // Assigner les rangs
   classement.forEach((item, index) => {

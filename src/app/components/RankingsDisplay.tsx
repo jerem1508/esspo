@@ -262,10 +262,13 @@ export function RankingsDisplay() {
                       Club <SortIndicator field="name" currentField={sortFieldClubs} direction={sortDirClubs} />
                     </th>
                     <th style={{ cursor: "pointer" }} onClick={() => handleSortClubs("members")}>
-                      Nombre de participants <SortIndicator field="members" currentField={sortFieldClubs} direction={sortDirClubs} />
+                      Participants <SortIndicator field="members" currentField={sortFieldClubs} direction={sortDirClubs} />
                     </th>
                     <th style={{ cursor: "pointer" }} onClick={() => handleSortClubs("total")}>
                       Points totaux <SortIndicator field="total" currentField={sortFieldClubs} direction={sortDirClubs} />
+                    </th>
+                    <th style={{ cursor: "pointer" }} onClick={() => handleSortClubs("average")}>
+                      Moyenne <SortIndicator field="average" currentField={sortFieldClubs} direction={sortDirClubs} />
                     </th>
                   </tr>
                 </thead>
@@ -277,8 +280,9 @@ export function RankingsDisplay() {
                       </td>
                       <td>{club.clubName}</td>
                       <td>{club.memberCount}</td>
+                      <td>{club.totalPoints}</td>
                       <td>
-                        <strong style={{ color: "#1976d2" }}>{club.totalPoints}</strong>
+                        <strong style={{ color: "#1976d2" }}>{club.averagePoints}</strong>
                       </td>
                     </tr>
                   ))}

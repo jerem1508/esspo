@@ -143,11 +143,39 @@ export const participantsAPI = {
   },
 };
 
+// Parse un nombre avec virgule ou point comme séparateur décimal
+const parseNumber = (value: string | number | undefined): number => {
+  if (value === undefined || value === null || value === "") return NaN;
+  if (typeof value === "number") return value;
+
+  let str = value.toString().trim();
+
+  // Si le nombre contient à la fois un point et une virgule,
+  // la virgule est probablement le séparateur décimal (format européen)
+  if (str.includes(",") && str.includes(".")) {
+    str = str.replace(/\./g, "").replace(",", ".");
+  } else if (str.includes(",")) {
+    str = str.replace(",", ".");
+  }
+
+  return parseFloat(str);
+};
+
 export const baremesAPI = {
   getAll: async () => {
     const { data, error } = await supabase.from("baremes").select("*");
     if (error) throw error;
-    return data;
+    // Normaliser les valeurs numériques des rows (performance et points)
+    return (
+      data?.map((bareme: any) => ({
+        ...bareme,
+        rows:
+          bareme.rows?.map((row: any) => ({
+            performance: parseNumber(row.performance),
+            points: parseNumber(row.points),
+          })) || [],
+      })) || []
+    );
   },
   save: async (bareme: Omit<Bareme, "created_at" | "updated_at">) => {
     // Vérifier si c'est un UUID valide (format: 550e8400-e29b-41d4-a716-446655440000)

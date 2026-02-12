@@ -69,6 +69,7 @@ export interface ClassementClub {
   clubId: string;
   clubName: string;
   totalPoints: number;
+  averagePoints: number; // Points pondérés par le nombre de participants
   memberCount: number;
   rank: number;
 }

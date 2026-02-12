@@ -82,7 +82,9 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
       return;
     }
 
-    const performanceNum = parseFloat(performance);
+    // Remplacer la virgule par un point pour supporter la notation française
+    const normalizedPerformance = performance.replace(",", ".");
+    const performanceNum = parseFloat(normalizedPerformance);
     if (isNaN(performanceNum) || performanceNum <= 0) {
       setLocalError("La performance doit être un nombre positif");
       return;
@@ -117,7 +119,7 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  };;
 
   const handleDeleteResult = async (resultId: string) => {
     try {
@@ -135,7 +137,9 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
   };
 
   const selectedParticipant = state.participants.find((p) => p.id === selectedParticipantId);
-  const calculatedPoints = performance && currentBareme ? calculatePointsForPerformance(parseFloat(performance), currentBareme) : 0;
+  const normalizedPerformanceForPreview = performance.replace(",", ".");
+  const calculatedPoints =
+    performance && currentBareme ? calculatePointsForPerformance(parseFloat(normalizedPerformanceForPreview), currentBareme) : 0;
 
   return (
     <div className="event-results-wizard">
@@ -249,8 +253,8 @@ export function EventResultsInput({ event, onBack }: EventResultsInputProps) {
               <div className="form-group">
                 <label>Performance ({currentBareme?.unit || "?"})</label>
                 <input
-                  type="number"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={performance}
                   onChange={(e) => setPerformance(e.target.value)}
                   className="form-control input-large"
