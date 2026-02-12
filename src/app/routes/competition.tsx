@@ -139,7 +139,15 @@ function CompetitionContent() {
                 <span className="card-title">Résumé des données</span>
                 <ul>
                   <li>Clubs: {state.clubs.length}</li>
-                  <li>Participants: {state.participants.length}</li>
+                  <li>
+                    Participants: {state.participants.length}
+                    <ul style={{ marginLeft: "20px", marginTop: "5px" }}>
+                      <li>EAF: {state.participants.filter((p) => p.category === "EAF").length}</li>
+                      <li>EAM: {state.participants.filter((p) => p.category === "EAM").length}</li>
+                      <li>POF: {state.participants.filter((p) => p.category === "POF").length}</li>
+                      <li>POM: {state.participants.filter((p) => p.category === "POM").length}</li>
+                    </ul>
+                  </li>
                   <li>Barèmes: {state.baremes.length}</li>
                   <li>Résultats: {state.results.length}</li>
                 </ul>

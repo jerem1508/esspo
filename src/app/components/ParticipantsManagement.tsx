@@ -131,7 +131,8 @@ export function ParticipantsManagement({ clubs, onAddClub }: ParticipantsManagem
       return (
         participant.firstName.toLowerCase().includes(searchLower) ||
         participant.lastName.toLowerCase().includes(searchLower) ||
-        participant.category.toLowerCase().includes(searchLower)
+        participant.category.toLowerCase().includes(searchLower) ||
+        getClubName(participant.clubId).toLowerCase().includes(searchLower)
       );
     });
   };
@@ -158,7 +159,7 @@ export function ParticipantsManagement({ clubs, onAddClub }: ParticipantsManagem
           <div style={{ marginTop: "20px", marginBottom: "20px" }}>
             <input
               type="text"
-              placeholder="Rechercher par prénom, nom ou catégorie..."
+              placeholder="Rechercher par prénom, nom, catégorie ou club..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
@@ -280,7 +281,8 @@ export function ParticipantsManagement({ clubs, onAddClub }: ParticipantsManagem
                     return (
                       participant.firstName.toLowerCase().includes(searchLower) ||
                       participant.lastName.toLowerCase().includes(searchLower) ||
-                      participant.category.toLowerCase().includes(searchLower)
+                      participant.category.toLowerCase().includes(searchLower) ||
+                      getClubName(participant.clubId).toLowerCase().includes(searchLower)
                     );
                   })
                   .map((participant: Participant) => (
