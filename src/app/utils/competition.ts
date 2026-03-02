@@ -81,9 +81,13 @@ export function calculateClassementIndividuel(
   // Trier par points décroissants
   classement.sort((a, b) => b.totalPoints - a.totalPoints);
 
-  // Assigner les rangs
-  classement.forEach((item, index) => {
-    item.rank = index + 1;
+  // Assigner les rangs par catégorie
+  const categories = ["EAF", "EAM", "POF", "POM"];
+  categories.forEach((category) => {
+    const categoryItems = classement.filter((item) => item.category === category);
+    categoryItems.forEach((item, index) => {
+      item.rank = index + 1;
+    });
   });
 
   return classement;

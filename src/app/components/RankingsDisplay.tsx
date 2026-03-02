@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import * as XLSX from "xlsx";
 import { useCompetition } from "../context/CompetitionContext";
 import { calculateClassementIndividuel, calculateClassementClub } from "../utils/competition";
 import type { Category, Club, ClassementIndividuel, ClassementClub } from "../types/competition";
@@ -148,6 +149,51 @@ export function RankingsDisplay() {
     return <span style={{ marginLeft: "5px" }}>{direction === "asc" ? "▲" : "▼"}</span>;
   };
 
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+
+    // Une feuille par catégorie
+    CATEGORIES.forEach((category) => {
+      const classementParCategorie = classementIndividuel.filter((c) => c.category === category);
+
+      const data = classementParCategorie.map((participant) => {
+        const vitesseResult = participant.results.find((r) => r.event === "vitesse");
+        const haiesResult = participant.results.find((r) => r.event === "haies");
+        const pentabondResult = participant.results.find((r) => r.event === "pentabond");
+        const lanceResult = participant.results.find((r) => r.event === "lancé");
+
+        return {
+          Rang: participant.rank,
+          Prénom: participant.firstName,
+          Nom: participant.lastName,
+          Club: participant.clubName,
+          "Vitesse (pts)": vitesseResult?.points || "-",
+          "Haies (pts)": haiesResult?.points || "-",
+          "Pentabond (pts)": pentabondResult?.points || "-",
+          "Lancé (pts)": lanceResult?.points || "-",
+          Total: participant.totalPoints,
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(workbook, worksheet, category);
+    });
+
+    // Feuille pour le classement des clubs
+    const clubsData = classementClubs.map((club) => ({
+      Rang: club.rank,
+      Club: club.clubName,
+      Participants: club.memberCount,
+      "Points totaux": club.totalPoints,
+      Moyenne: club.averagePoints,
+    }));
+    const clubsWorksheet = XLSX.utils.json_to_sheet(clubsData);
+    XLSX.utils.book_append_sheet(workbook, clubsWorksheet, "Clubs");
+
+    // Téléchargement
+    XLSX.writeFile(workbook, "resultats_competition.xlsx");
+  };
+
   const renderClassementByCategory = (category: Category) => {
     const classementParCategorie = classementIndividuel.filter((c) => c.category === category);
 
@@ -223,7 +269,18 @@ export function RankingsDisplay() {
   return (
     <div className="card">
       <div className="card-content">
-        <span className="card-title">Classements</span>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span className="card-title">Classements</span>
+          <button
+            className="btn waves-effect waves-light"
+            onClick={exportToExcel}
+            disabled={!hasResults}
+            title={!hasResults ? "Aucun résultat à exporter" : "Exporter en Excel"}
+          >
+            <i className="material-icons left">file_download</i>
+            Export Excel
+          </button>
+        </div>
 
         {!hasResults && (
           <div className="orange-text" style={{ marginBottom: "20px" }}>
